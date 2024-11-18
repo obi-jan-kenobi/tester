@@ -28,7 +28,7 @@ jobs:
           echo "$GITHUB_CONTEXT"
 
       - name: echo sha
-        run: echo ${{ github.event.pull_request.base.head.sha}}
+        run: echo ${{ github.event.pull_request.head.sha}}
 
       - name: print previous commit
         run: echo ${{ steps.prev-commit.outputs.sha }}
