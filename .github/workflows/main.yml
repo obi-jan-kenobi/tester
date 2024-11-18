@@ -28,6 +28,12 @@
 #            from: sha-${{ steps.prev-commit.outputs.sha }}
 #            use_metadata: true
 
+        - name: Dump GitHub context
+          env:
+            GITHUB_CONTEXT: ${{ toJson(github) }}
+          run: |
+            echo "$GITHUB_CONTEXT"
+
       outputs:
         image: ${{ steps.promote.outputs.image }}
         tag: ${{ steps.promote.outputs.tag }}  
