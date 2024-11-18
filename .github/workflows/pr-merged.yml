@@ -1,0 +1,26 @@
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Get previous commit
+        id: prev-commit
+        run: echo "sha=$(git rev-parse --verify HEAD^1)" >> $GITHUB_OUTPUT
+      
+      - name: print sha
+        run: echo ${{ github.sha }}
+
+      - name: print previous commit
+        run: echo ${{ steps.prev-commit.outputs.sha }}
+      - run: |
+          echo The PR was merged
