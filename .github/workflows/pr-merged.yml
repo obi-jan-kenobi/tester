@@ -1,3 +1,4 @@
+name: pull_request_target closed and merged
 on:
   pull_request_target:
     types:
@@ -19,6 +20,12 @@ jobs:
       
       - name: print sha
         run: echo ${{ github.sha }}
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
 
       - name: print previous commit
         run: echo ${{ steps.prev-commit.outputs.sha }}
