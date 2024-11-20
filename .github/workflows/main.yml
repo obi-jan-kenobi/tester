@@ -14,6 +14,12 @@
             fetch-depth: 2
             fetch-tags: true
 
+        - name: Get Pull Request Number
+          id: pr
+          run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 #        - name: Semantic Release
 #          id: semantic_release
 #          uses: cycjimmy/semantic-release-action@v4
