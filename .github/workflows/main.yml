@@ -15,6 +15,9 @@ jobs:
           fetch-depth: 2
           fetch-tags: true
 
+      - name: echo PARENT_COMMITS
+        run: git rev-parse HEAD^@
+
       - name: Get the HEAD SHA of the merged PR branch
         run: |
           # Get the parent commits of the merge commit
