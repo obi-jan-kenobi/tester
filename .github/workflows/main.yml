@@ -1,12 +1,9 @@
-name: run_on_main
+name: Retag Image on Merge
 
-# Only trigger, when the other workflow succeeded
 on:
-  workflow_run:
-    workflows: ["pr-merged"]
-    types:
-      - completed
-    branches: ["main"]
+  push:
+    branches:
+      - main
 
 jobs:
   context:
@@ -17,6 +14,18 @@ jobs:
         with:
           fetch-depth: 2
           fetch-tags: true
+
+      - name: Get the HEAD SHA of the merged PR branch
+        run: |
+          # Get the parent commits of the merge commit
+          PARENT_COMMITS=$(git rev-parse HEAD^@)
+
+          # Extract the SHA of the PR branch (not the main branch)
+          for COMMIT in $PARENT_COMMITS; do
+            if ! git branch --contains "$COMMIT" | grep -q 'main'; then
+              echo "PR_BRANCH_SHA=$COMMIT" >> $GITHUB_ENV
+            fi
+          done
 
       - name: Semantic Release
         id: semantic_release
