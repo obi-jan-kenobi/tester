@@ -1,4 +1,4 @@
-name: pull_request_target closed and merged
+name: pr-merged
 on:
   pull_request_target:
     types:

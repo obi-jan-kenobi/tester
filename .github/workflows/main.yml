@@ -1,56 +1,35 @@
-  name: Push to main
-  on:
-    push:
-      branches: [ 'main' ]
+name: run_on_main
 
-  jobs:
-    context:
-      runs-on: ubuntu-latest
-      steps:
+# Only trigger, when the other workflow succeeded
+on:
+  workflow_run:
+    workflows: ["pr-merged"]
+    types:
+      - completed
+    branches: ["main"]
 
-        - name: Checkout
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 2
-            fetch-tags: true
+jobs:
+  context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+          fetch-tags: true
 
-        - name: Get Pull Request Number
-          id: pr
-          run: echo "::set-output name=pull_request_number::$(gh pr view --json number -q .number || echo "")"
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Semantic Release
+        id: semantic_release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          semantic_version: 23
+          extra_plugins: |
+            semantic-release-export-data
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
-#        - name: Semantic Release
-#          id: semantic_release
-#          uses: cycjimmy/semantic-release-action@v4
-#          with:
-#            semantic_version: 23
-#            extra_plugins: |
-#              semantic-release-export-data
-#          env:
-#            GITHUB_TOKEN: ${{ github.token }}
-
-        - name: Get previous commit
-          id: prev-commit
-          run: echo "sha=$(git rev-parse --verify HEAD^1)" >> $GITHUB_OUTPUT
-
-        - name: print previous commit
-          run: echo ${{ steps.prev-commit.outputs.sha }}
-#        - name: Docker image promote
-#          uses: cloudposse/github-action-docker-promote@main
-#          id: promote
-#          with:
-#            organization: ${{ github.event.repository.owner.login }}
-#            repository: ${{ github.event.repository.name }}
-#            from: sha-${{ steps.prev-commit.outputs.sha }}
-#            use_metadata: true
-
-        - name: Dump GitHub context
-          env:
-            GITHUB_CONTEXT: ${{ toJson(github) }}
-          run: |
-            echo "$GITHUB_CONTEXT"
-
-      outputs:
-        image: ${{ steps.promote.outputs.image }}
-        tag: ${{ steps.promote.outputs.tag }}  
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
