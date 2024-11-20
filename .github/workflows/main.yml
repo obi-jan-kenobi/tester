@@ -18,6 +18,9 @@ jobs:
       - name: echo PARENT_COMMITS
         run: git rev-parse HEAD^@
 
+      - name: check PR
+        run: gh pr list --search "c7c24a01e46b2b5a9be4feb1ee0115a2060c6951" --state merged
+
       - name: Get the HEAD SHA of the merged PR branch
         run: |
           # Get the parent commits of the merge commit
@@ -30,15 +33,15 @@ jobs:
             fi
           done
 
-      - name: Semantic Release
-        id: semantic_release
-        uses: cycjimmy/semantic-release-action@v4
-        with:
-          semantic_version: 23
-          extra_plugins: |
-            semantic-release-export-data
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+#      - name: Semantic Release
+#        id: semantic_release
+#        uses: cycjimmy/semantic-release-action@v4
+#        with:
+#          semantic_version: 23
+#          extra_plugins: |
+#            semantic-release-export-data
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Dump GitHub context
         env:
