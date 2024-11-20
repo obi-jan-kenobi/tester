@@ -19,7 +19,7 @@ jobs:
         run: git rev-parse HEAD^@
 
       - name: check PR
-        run: echo (gh pr list --search "${{ github.sha }}" --state merged --json=headRefOid --jq='.[0].headRefOid') >> $GITHUB_OUTPUT
+        run: echo $(gh pr list --search "${{ github.sha }}" --state merged --json=headRefOid --jq='.[0].headRefOid') >> $GITHUB_OUTPUT
         id: pr-head-sha
         env:
           GH_TOKEN: ${{ github.token }}
