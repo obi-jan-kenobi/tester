@@ -13,6 +13,17 @@
           uses: actions/checkout@v3
           with:
             fetch-depth: 2
+            fetch-tags: true
+
+        - name: Semantic Release
+          id: semantic_release
+          uses: cycjimmy/semantic-release-action@v4
+          with:
+            semantic_version: 23
+            extra_plugins: |
+              semantic-release-export-data
+          env:
+            GITHUB_TOKEN: ${{ github.token }}
 
         - name: Get previous commit
           id: prev-commit
