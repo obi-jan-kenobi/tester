@@ -39,18 +39,31 @@ jobs:
             fi
           done
 
-#      - name: Semantic Release
-#        id: semantic_release
-#        uses: cycjimmy/semantic-release-action@v4
-#        with:
-#          semantic_version: 23
-#          extra_plugins: |
-#            semantic-release-export-data
-#        env:
-#          GITHUB_TOKEN: ${{ github.token }}
+      #      - name: Semantic Release
+      #        id: semantic_release
+      #        uses: cycjimmy/semantic-release-action@v4
+      #        with:
+      #          semantic_version: 23
+      #          extra_plugins: |
+      #            semantic-release-export-data
+      #        env:
+      #          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: deploy to staging
+        run: echo "deployed to staging"
+
+  deploy-to-production:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: deploy to production
+        run: echo "deployed to production"
