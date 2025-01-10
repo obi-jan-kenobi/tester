@@ -45,6 +45,10 @@
             GITHUB_CONTEXT: ${{ toJson(github) }}
           run: |
             echo "$GITHUB_CONTEXT"
+        
+        - name: Print head.sha
+          run: |
+            echo "${{ github.event.pull_request && github.event.pull_request.head.sha }}"
 
       outputs:
         image: ${{ steps.promote.outputs.image }}
